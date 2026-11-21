@@ -1,1 +1,50 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EduSearch</title>
+<style>
+body{font-family:Arial;margin:0;background:#eef3ff;text-align:center}
+header{background:#1557c0;color:white;padding:30px}
+main{padding:20px}
+input{padding:14px;width:85%;border-radius:8px;border:1px solid gray}
+button{padding:13px;background:#1557c0;color:white;border:0;border-radius:8px;margin:10px}
+.card{background:white;padding:15px;margin:12px;border-radius:10px}
+</style>
+</head>
+<body>
+<header>
+<h1>📚 EduSearch</h1>
+<p>Your Learning Partner</p>
+</header>
+<main>
+<h2>Learn Anything, Anytime!</h2>
+<input id="q" placeholder="Search your study topic">
+<button onclick="search()">Search</button>
+<div id="result"></div>
+</main>
+<script>
+async function search(){
+let q=document.getElementById('q').value.trim();
+let r=document.getElementById('result');
+if(!q){r.innerHTML="Please enter a topic";return;}
+r.innerHTML="Searching...";
+try{
+let u="https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(q)+"&format=json&origin=*";
+let d=await(await fetch(u)).json();
+r.innerHTML="";
+d.query.search.forEach(x=>{
+let c=document.createElement("div");
+c.className="card";
+let h=document.createElement("h3");
+h.textContent=x.title;
+let p=document.createElement("p");
+p.textContent=x.snippet.replace(/<[^>]*>/g,"");
+c.append(h,p);
+r.append(c);
+});
+}catch(e){r.textContent="Search failed. Try again.";}
+}
+</script>
+</body>
+</html>
